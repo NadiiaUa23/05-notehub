@@ -6,17 +6,23 @@ import css from "./App.module.css";
 
 export default function App() {
   return (
-    <div className={css.App}>
-      <SearchBox />
-      <div>нумерация страниц</div>
-      <button className={css.button}> Create note +</button>
-      <Modal />
-      <div>
-        <h4>название заметоки </h4>
-        <p> инпут текст заметки</p>
-        <p>тег с впливающим списком</p>
-        <button className={css.button}>удалить</button>
-      </div>
+    //
+
+    //   <div>
+    //     <h4>название заметоки </h4>
+    //     <p> инпут текст заметки</p>
+    //     <p>тег с впливающим списком</p>
+    //     <button className={css.button}>удалить</button>
+    //   </div>
+
+    <div className={css.app}>
+      <header className={css.toolbar}>
+        <SearchBox />
+        <div>нумерация страниц</div>
+        {/* Пагінація */}
+        <button className={css.button}> Create note +</button>
+        {/* Кнопка створення нотатки  */}
+      </header>
     </div>
   );
 }
