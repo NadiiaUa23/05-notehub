@@ -1,0 +1,12 @@
+.empty {
+    text-align: center;
+    padding: 48px 16px;
+    opacity: .8;
+}
+
+.button {
+    margin-top: 16px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}

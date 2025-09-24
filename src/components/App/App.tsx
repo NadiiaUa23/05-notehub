@@ -1,28 +1,102 @@
-import Modal from "../Modal/Modal";
-import SearchBox from "../SearchBox/SearchBox";
+import { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useDebounce } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 import css from "./App.module.css";
-// import axios from "axios";
-// import ReactPaginate from "react-paginate";
+import SearchBox from "../SearchBox/SearchBox";
+import Pagination from "../Pagination/Pagination";
+import Modal from "../Modal/Modal";
+import NoteForm from "../NoteForm/NoteForm";
+import NoteList from "../NoteList/NoteList";
+import Loader from "../Loader/Loader";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import { fetchNotes, deleteNote } from "../services/noteService";
+
+const PER_PAGE = 12;
 
 export default function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [searchDebounced] = useDebounce(search, 500);
+  const [page, setPage] = useState(1);
+
+  const queryClient = useQueryClient();
+
+  const notesQuery = useQuery({
+    queryKey: ["notes", page, searchDebounced],
+    queryFn: () =>
+      fetchNotes({
+        page,
+        perPage: PER_PAGE,
+        search: searchDebounced || undefined,
+      }),
+    keepPreviousData: true,
+    staleTime: 30000,
+  });
+
+  const delMutation = useMutation({
+    mutationFn: (id: string) => deleteNote(id),
+    onSuccess: () => {
+      // Після видалення — оновимо список
+      queryClient.invalidateQueries({ queryKey: ["notes"] });
+    },
+  });
+
+  const items = notesQuery.data?.data ?? [];
+  const totalPages = notesQuery.data?.totalPages ?? 1;
+
+  // Якщо змінюється пошук — повертайся на 1 сторінку
+  useEffect(() => {
+    setPage(1);
+  }, [searchDebounced]);
+
   return (
-    //
-
-    //   <div>
-    //     <h4>название заметоки </h4>
-    //     <p> инпут текст заметки</p>
-    //     <p>тег с впливающим списком</p>
-    //     <button className={css.button}>удалить</button>
-    //   </div>
-
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox />
-        <div>нумерация страниц</div>
-        {/* Пагінація */}
-        <button className={css.button}> Create note +</button>
-        {/* Кнопка створення нотатки  */}
+        {/* Пошук */}
+        <SearchBox value={search} onChange={setSearch} />
+
+        {/* Пагінація (показувати тільки якщо > 1 сторінки) */}
+        {totalPages > 1 && (
+          <Pagination
+            pageCount={totalPages}
+            page={page}
+            onPageChange={setPage}
+          />
+        )}
+
+        {/* Кнопка створення */}
+        <button className={css.button} onClick={() => setIsModalOpen(true)}>
+          Create note +
+        </button>
       </header>
+
+      {/* Стани запиту */}
+      {notesQuery.isLoading && <Loader />}
+      {notesQuery.isError && <ErrorMessage message="Failed to load notes" />}
+
+      {/* Список нотаток (показувати лише якщо є елементи) */}
+      {!notesQuery.isLoading && !notesQuery.isError && items.length > 0 && (
+        <NoteList items={items} onDelete={(id) => delMutation.mutate(id)} />
+      )}
+
+      {/* Порожній стан */}
+      {!notesQuery.isLoading && !notesQuery.isError && items.length === 0 && (
+        <div className={css.empty}>No notes yet</div>
+      )}
+
+      {/* Модалка створення */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <NoteForm
+          onCancel={() => setIsModalOpen(false)}
+          onCreated={() => {
+            setIsModalOpen(false);
+            // Після створення — оновимо список і повернемось на 1 сторінку
+            setPage(1);
+            queryClient.invalidateQueries({ queryKey: ["notes"] });
+          }}
+        />
+      </Modal>
     </div>
   );
 }
