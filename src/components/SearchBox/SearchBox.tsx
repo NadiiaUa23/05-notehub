@@ -14,6 +14,7 @@ export default function SearchBox({
         placeholder="Search notes"
         value={value}
         onChange={handleChange}
+placeholder="Search notes
       />
     );
   };
