@@ -36,13 +36,13 @@ export interface FetchNotesResponse {
   totalPages: number;
 }
 
-interface ErrorMessageProps {
+export interface ErrorMessageProps {
   message: string;
 }
 
 export interface SearchBoxProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (newValue: string) => void;
 }
 
 export interface PaginationProps {
@@ -67,7 +67,7 @@ export interface NoteFormProps {
   onCreated: () => void; // що робити після успіху
 }
 
-interface FormValues {
+export interface FormValues {
   title: string;
   content: string;
   tag: NoteTag | "";
