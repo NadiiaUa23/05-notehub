@@ -13,6 +13,7 @@ export default function SearchBox({ value, onChange }: SearchBoxProps) {
         placeholder="Search notes"
         value={value}
         onChange={handleChange}
+placeholder="Search notes
         data-testid="searchbox"
       />
     </div>
