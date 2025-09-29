@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
-// import { useDebouncedCallback } from "use-debounce";
 import css from "./App.module.css";
 import SearchBox from "../SearchBox/SearchBox";
 import Pagination from "../Pagination/Pagination";
@@ -18,18 +16,17 @@ const PER_PAGE = 12;
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [searchDebounced] = useDebounce(search, 500);
   const [page, setPage] = useState(1);
 
   const queryClient = useQueryClient();
 
   const notesQuery = useQuery({
-    queryKey: ["notes", page, searchDebounced],
+    queryKey: ["notes", page, search],
     queryFn: () =>
       fetchNotes({
         page,
         perPage: PER_PAGE,
-        search: searchDebounced || undefined,
+        search: search || undefined,
       }),
     staleTime: 30_000,
     keepPreviousData: true,
@@ -49,7 +46,7 @@ export default function App() {
   // Якщо змінюється пошук — повертайся на 1 сторінку
   useEffect(() => {
     setPage(1);
-  }, [searchDebounced]);
+  }, [search]);
 
   return (
     <div className={css.app}>

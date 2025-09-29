@@ -8,7 +8,7 @@ export default function SearchBox({ value, onChange }: SearchBoxProps) {
     (event: ChangeEvent<HTMLInputElement>) => {
       onChange(event.target.value);
     },
-    400
+    500
   );
 
   return (
