@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useDebounce } from "use-debounce";
+
 // import { useDebouncedCallback } from "use-debounce";
 import css from "./App.module.css";
 import SearchBox from "../SearchBox/SearchBox";
@@ -10,6 +10,8 @@ import NoteForm from "../NoteForm/NoteForm";
 import NoteList from "../NoteList/NoteList";
 import Loader from "../Loader/Loader";
 import { fetchNotes, deleteNote } from "../services/noteService";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import { useDebounce } from "use-debounce";
 
 const PER_PAGE = 12;
 
@@ -29,8 +31,8 @@ export default function App() {
         perPage: PER_PAGE,
         search: searchDebounced || undefined,
       }),
-    // keepPreviousData: true,
-    staleTime: 30000,
+    staleTime: 30_000,
+    keepPreviousData: true,
   });
 
   const delMutation = useMutation({
@@ -72,7 +74,7 @@ export default function App() {
 
       {/* Стани запиту */}
       {notesQuery.isLoading && <Loader />}
-      {/* {notesQuery.isError && <ErrorMessage message="holla" />} */}
+      {/* {notesQuery.isError && <ErrorMessage message="Failed to load notes" />} */}
 
       {/* Список нотаток (показувати лише якщо є елементи) */}
       {!notesQuery.isLoading && !notesQuery.isError && items.length > 0 && (

@@ -15,12 +15,11 @@ export async function fetchNotes(
   const res = await http.get<ApiNotesResponse>("/notes", {
     params: {
       page,
-      perPage, // бек ігнорує порожній search — не шлемо пустий
+      perPage,
       ...(search ? { search } : {}),
     },
   });
   const body = res.data;
-  // Нормалізуємо в єдиний формат, який очікує App
   const items = body.notes ?? [];
   const total = body.total ?? items.length;
   const _perPage = body.perPage ?? perPage;
