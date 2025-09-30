@@ -9,7 +9,6 @@ import NoteList from "../NoteList/NoteList";
 import Loader from "../Loader/Loader";
 import { fetchNotes, deleteNote } from "../services/noteService";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import { useDebounce } from "use-debounce";
 
 const PER_PAGE = 12;
 
@@ -29,7 +28,6 @@ export default function App() {
         search: search || undefined,
       }),
     staleTime: 30_000,
-    keepPreviousData: true,
   });
 
   const delMutation = useMutation({
@@ -71,7 +69,7 @@ export default function App() {
 
       {/* Стани запиту */}
       {notesQuery.isLoading && <Loader />}
-      {/* {notesQuery.isError && <ErrorMessage message="Failed to load notes" />} */}
+      {notesQuery.isError && <ErrorMessage message={message} />}
 
       {/* Список нотаток (показувати лише якщо є елементи) */}
       {!notesQuery.isLoading && !notesQuery.isError && items.length > 0 && (
