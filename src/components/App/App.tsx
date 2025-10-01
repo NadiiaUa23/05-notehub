@@ -7,7 +7,7 @@ import Modal from "../Modal/Modal";
 import NoteForm from "../NoteForm/NoteForm";
 import NoteList from "../NoteList/NoteList";
 import Loader from "../Loader/Loader";
-import { fetchNotes, deleteNote } from "../services/noteService";
+import { fetchNotes, deleteNote } from "../../services/noteService";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 const PER_PAGE = 12;

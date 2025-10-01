@@ -12,7 +12,7 @@ import {
   type NoteFormProps,
   type NoteTag,
 } from "../../types/note";
-import { createNote } from "../services/noteService";
+import { createNote } from "../../services/noteService";
 
 const TAGS: NoteTag[] = ["Todo", "Work", "Personal", "Meeting", "Shopping"];
 

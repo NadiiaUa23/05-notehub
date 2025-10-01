@@ -5,7 +5,7 @@ import type {
   FetchNotesResponse,
   Note,
   ApiNotesResponse,
-} from "../../types/note";
+} from "../types/note";
 
 export async function fetchNotes(
   params: FetchNotesParams = {}
