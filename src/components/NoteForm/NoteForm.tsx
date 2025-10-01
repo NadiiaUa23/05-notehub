@@ -3,11 +3,15 @@ import {
   Form,
   Field,
   ErrorMessage as FormikError,
-  type FormikValues,
+  // type FormikValues,
 } from "formik";
 import * as Yup from "yup";
 import css from "./NoteForm.module.css";
-import { type NoteFormProps, type NoteTag } from "../../types/note";
+import {
+  type FormValues,
+  type NoteFormProps,
+  type NoteTag,
+} from "../../types/note";
 import { createNote } from "../services/noteService";
 
 const TAGS: NoteTag[] = ["Todo", "Work", "Personal", "Meeting", "Shopping"];
@@ -19,10 +23,10 @@ const schema = Yup.object({
 });
 
 export default function NoteForm({ onCancel, onCreated }: NoteFormProps) {
-  const initialValues: FormikValues = { title: "", content: "", tag: "Todo" };
+  const initialValues: FormValues = { title: "", content: "", tag: "Todo" };
 
   return (
-    <Formik
+    <Formik<FormValues>
       initialValues={initialValues}
       validationSchema={schema}
       onSubmit={async (values, helpers) => {
@@ -45,7 +49,8 @@ export default function NoteForm({ onCancel, onCreated }: NoteFormProps) {
           <div className={css.formGroup}>
             <label htmlFor="title">Title</label>
             <Field id="title" type="text" name="title" className={css.input} />
-            <span data-name="title" className={css.error}>
+            {/* @ts-expect-error non-standard attribute required by task */}
+            <span name="title" className={css.error}>
               <FormikError name="title" />
             </span>
           </div>
@@ -59,7 +64,8 @@ export default function NoteForm({ onCancel, onCreated }: NoteFormProps) {
               rows={8}
               className={css.textarea}
             />
-            <span data-name="content" className={css.error}>
+            {/* @ts-expect-error non-standard attribute required by task */}
+            <span name="content" className={css.error}>
               <FormikError name="content" />
             </span>
           </div>
@@ -73,7 +79,8 @@ export default function NoteForm({ onCancel, onCreated }: NoteFormProps) {
               <option value="Meeting">Meeting</option>
               <option value="Shopping">Shopping</option>
             </Field>
-            <span data-name="tag" className={css.error}>
+            {/* @ts-expect-error non-standard attribute required by task */}
+            <span name="tag" className={css.error}>
               <FormikError name="tag" />
             </span>
           </div>
