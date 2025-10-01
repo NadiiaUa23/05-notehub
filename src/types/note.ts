@@ -7,7 +7,6 @@ export interface Note {
   createdAt: string;
   updatedAt: string;
 }
-
 export interface ApiNotesResponse {
   notes: Note[]; // <-- головне поле
   page?: number; // може бути
