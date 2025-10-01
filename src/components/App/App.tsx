@@ -80,7 +80,7 @@ export default function App() {
         <NoteList items={items} onDelete={(id) => delMutation.mutate(id)} />
       )}
 
-      {/* Порожній стан */}
+      {/* Порожній стан r */}
       {!notesQuery.isLoading && !notesQuery.isError && items.length === 0 && (
         <div className={css.empty}>No notes yet</div>
       )}
