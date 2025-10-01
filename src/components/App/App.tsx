@@ -49,7 +49,7 @@ export default function App() {
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        {/* Пошук */}
+        {/* Компонент SearchBox  */}
         <SearchBox value={search} onChange={setSearch} />
 
         {/* Пагінація (показувати тільки якщо > 1 сторінки) */}
@@ -61,7 +61,7 @@ export default function App() {
           />
         )}
 
-        {/* Кнопка створення */}
+        {/* Кнопка створення  нотатки*/}
         <button className={css.button} onClick={() => setIsModalOpen(true)}>
           Create note +
         </button>

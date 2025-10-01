@@ -45,7 +45,7 @@ export default function NoteForm({ onCancel, onCreated }: NoteFormProps) {
           <div className={css.formGroup}>
             <label htmlFor="title">Title</label>
             <Field id="title" type="text" name="title" className={css.input} />
-            <span name="title" className={css.error}>
+            <span data-name="title" className={css.error}>
               <FormikError name="title" />
             </span>
           </div>
@@ -59,7 +59,7 @@ export default function NoteForm({ onCancel, onCreated }: NoteFormProps) {
               rows={8}
               className={css.textarea}
             />
-            <span name="content" className={css.error}>
+            <span data-name="content" className={css.error}>
               <FormikError name="content" />
             </span>
           </div>
@@ -73,7 +73,7 @@ export default function NoteForm({ onCancel, onCreated }: NoteFormProps) {
               <option value="Meeting">Meeting</option>
               <option value="Shopping">Shopping</option>
             </Field>
-            <span name="tag" className={css.error}>
+            <span data-name="tag" className={css.error}>
               <FormikError name="tag" />
             </span>
           </div>
