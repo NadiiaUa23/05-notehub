@@ -69,7 +69,11 @@ export default function App() {
 
       {/* Стани запиту */}
       {notesQuery.isLoading && <Loader />}
-      {notesQuery.isError && <ErrorMessage message={message} />}
+      {notesQuery.isError && (
+        <ErrorMessage
+          message={notesQuery.error?.message ?? "Failed to load notes"}
+        />
+      )}
 
       {/* Список нотаток (показувати лише якщо є елементи) */}
       {!notesQuery.isLoading && !notesQuery.isError && items.length > 0 && (
