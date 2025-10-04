@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useQueryClient,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import css from "./App.module.css";
+
 import SearchBox from "../SearchBox/SearchBox";
 import Pagination from "../Pagination/Pagination";
 import Modal from "../Modal/Modal";
 import NoteForm from "../NoteForm/NoteForm";
 import NoteList from "../NoteList/NoteList";
 import Loader from "../Loader/Loader";
-import { fetchNotes, deleteNote } from "../../services/noteService";
+import { fetchNotes } from "../../services/noteService";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import { useDebounce } from "use-debounce";
 
 const PER_PAGE = 12;
 
@@ -16,34 +22,48 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+
+  // відкладене значення пошуку
+  const [searchDebounced] = useDebounce(search, 500);
+
   const queryClient = useQueryClient();
 
   const notesQuery = useQuery({
-    queryKey: ["notes", page, search],
+    queryKey: ["notes", page, searchDebounced],
     queryFn: () =>
       fetchNotes({
         page,
         perPage: PER_PAGE,
         search: search || undefined,
       }),
+    placeholderData: keepPreviousData,
     staleTime: 30_000,
-  });
-
-  const delMutation = useMutation({
-    mutationFn: (id: string) => deleteNote(id),
-    onSuccess: () => {
-      // Після видалення — оновимо список
-      queryClient.invalidateQueries({ queryKey: ["notes"] });
-    },
   });
 
   const items = notesQuery.data?.data ?? [];
   const totalPages = notesQuery.data?.totalPages ?? 1;
 
-  // Якщо змінюється пошук — повертайся на 1 сторінку
+  // Якщо змінився пошук — повертаємось на 1-шу сторінку
   useEffect(() => {
     setPage(1);
-  }, [search]);
+  }, [searchDebounced]);
+
+  // (Опціонально) префетч наступної сторінки — швидша навігація
+  useEffect(() => {
+    if (!notesQuery.data) return;
+    const { page: cur, totalPages: tp } = notesQuery.data;
+    if (cur < tp) {
+      queryClient.prefetchQuery({
+        queryKey: ["notes", page + 1, searchDebounced],
+        queryFn: () =>
+          fetchNotes({
+            page: page + 1,
+            perPage: PER_PAGE,
+            search: searchDebounced || undefined,
+          }),
+      });
+    }
+  }, [page, searchDebounced, notesQuery.data, queryClient]);
 
   return (
     <div className={css.app}>
@@ -70,7 +90,11 @@ export default function App() {
       {notesQuery.isLoading && <Loader />}
       {notesQuery.isError && (
         <ErrorMessage
-          message={notesQuery.error?.message ?? "Failed to load notes"}
+          message={
+            notesQuery.error instanceof Error
+              ? notesQuery.error.message
+              : "Failed to load notes"
+          }
         />
       )}
 
