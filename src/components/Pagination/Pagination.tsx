@@ -1,6 +1,11 @@
 import ReactPaginate from "react-paginate";
 import css from "./Pagination.module.css";
-import type { PaginationProps } from "../../types/note";
+
+interface PaginationProps {
+  pageCount: number; // скільки всього сторінок
+  page: number; // поточна сторінка (1-базована)
+  onPageChange: (nextPage: number) => void;
+}
 
 export default function Pagination({
   pageCount,

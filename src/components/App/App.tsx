@@ -76,7 +76,7 @@ export default function App() {
 
       {/* Список нотаток (показувати лише якщо є елементи) */}
       {!notesQuery.isLoading && !notesQuery.isError && items.length > 0 && (
-        <NoteList items={items} onDelete={(id) => delMutation.mutate(id)} />
+        <NoteList items={items} />
       )}
 
       {/* Порожній стан r */}

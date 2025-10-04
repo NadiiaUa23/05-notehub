@@ -1,7 +1,11 @@
 import type { ChangeEvent } from "react";
-import type { SearchBoxProps } from "../../types/note";
 import css from "./SearchBox.module.css";
 import { useDebouncedCallback } from "use-debounce";
+
+interface SearchBoxProps {
+  value: string;
+  onChange: (newValue: string) => void;
+}
 
 export default function SearchBox({ value, onChange }: SearchBoxProps) {
   const handleChange = useDebouncedCallback(

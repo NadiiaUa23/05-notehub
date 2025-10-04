@@ -1,11 +1,26 @@
 import http from "./http";
-import type {
-  CreateNoteDto,
-  FetchNotesParams,
-  FetchNotesResponse,
-  Note,
-  ApiNotesResponse,
-} from "../types/note";
+import type { CreateNoteDto, Note } from "../types/note";
+
+interface FetchNotesParams {
+  page?: number;
+  perPage?: number;
+  search?: string;
+}
+
+interface FetchNotesResponse {
+  data: Note[]; // масив нотаток
+  page: number;
+  perPage: number;
+  total: number;
+  totalPages: number;
+}
+interface ApiNotesResponse {
+  notes: Note[]; // <-- головне поле
+  page?: number; // може бути
+  perPage?: number; // може бути
+  total?: number; // може бути
+  totalPages: number;
+}
 
 export async function fetchNotes(
   params: FetchNotesParams = {}

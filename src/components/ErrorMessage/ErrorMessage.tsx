@@ -1,5 +1,8 @@
-import type { ErrorMessageProps } from "../../types/note";
 import css from "./ErrorMessage.module.css";
+
+interface ErrorMessageProps {
+  message: string;
+}
 
 export default function ErrorMessage({
   message = "Failed to load notes",
