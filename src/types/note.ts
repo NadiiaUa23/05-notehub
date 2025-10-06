@@ -10,7 +10,7 @@ export interface Note {
 export interface CreateNoteDto {
   title: string;
   content: string;
-  tag: NoteTag;
+  tag: string;
 }
 export interface FormValues {
   title: string;
