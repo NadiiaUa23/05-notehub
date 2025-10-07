@@ -15,5 +15,5 @@ export interface CreateNoteDto {
 export interface FormValues {
   title: string;
   content: string;
-  tag: NoteTag | "";
+  tag: NoteTag;
 }
