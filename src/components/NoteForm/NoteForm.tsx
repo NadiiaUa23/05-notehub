@@ -2,13 +2,15 @@ import { Formik, Form, Field, ErrorMessage as FormikError } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import css from "./NoteForm.module.css";
-import { type FormValues, type NoteTag } from "../../types/note";
+import { type CreateNote, type NoteTag } from "../../types/note";
 import { createNote } from "../../services/noteService";
 
 interface NoteFormProps {
   onCancel: () => void;
-  onCreated: () => void; // що робити після успіху
+  onCreated: () => void;
 }
+
+type FormValues = CreateNote;
 
 const TAGS: NoteTag[] = ["Todo", "Work", "Personal", "Meeting", "Shopping"];
 
@@ -22,7 +24,7 @@ export default function NoteForm({ onCancel, onCreated }: NoteFormProps) {
   const queryClient = useQueryClient();
 
   const createMutation = useMutation({
-    mutationFn: createNote,
+    mutationFn: (dto: CreateNote) => createNote(dto),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       onCreated();
@@ -38,7 +40,7 @@ export default function NoteForm({ onCancel, onCreated }: NoteFormProps) {
       onSubmit={async (values, helpers) => {
         try {
           await createMutation.mutateAsync(values);
-          onCreated();
+          helpers.resetForm();
         } catch (e) {
           console.error(e);
         } finally {

@@ -7,12 +7,13 @@ export interface Note {
   createdAt: string;
   updatedAt: string;
 }
-export interface CreateNoteDto {
+
+export interface FormValues {
   title: string;
   content: string;
-  tag: string;
+  tag: NoteTag;
 }
-export interface FormValues {
+export interface CreateNote {
   title: string;
   content: string;
   tag: NoteTag;

@@ -1,5 +1,5 @@
 import http from "./http";
-import type { CreateNoteDto, Note } from "../types/note";
+import type { CreateNote, Note } from "../types/note";
 
 interface FetchNotesParams {
   page?: number;
@@ -52,8 +52,8 @@ export async function fetchNotes(
   };
 }
 
-export async function createNote(data: CreateNoteDto): Promise<Note> {
-  const res = await http.post<Note>("/notes", data);
+export async function createNote(dto: CreateNote): Promise<Note> {
+  const res = await http.post<Note>("/notes", dto);
   return res.data;
 }
 
